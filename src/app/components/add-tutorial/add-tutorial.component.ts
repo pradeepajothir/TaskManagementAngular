@@ -1,29 +1,29 @@
 import { Component } from '@angular/core';
-import { Tutorial } from '../../models/tutorial.model';
-import { TutorialService } from '../../services/tutorial.service';
+import { Task } from '../../models/task.model';
+import { TaskService } from '../../services/task.service';
 
 @Component({
-  selector: 'app-add-tutorial',
-  templateUrl: './add-tutorial.component.html',
-  styleUrls: ['./add-tutorial.component.css'],
+  selector: 'app-add-task',
+  templateUrl: './add-task.component.html',
+  styleUrls: ['./add-task.component.css'],
 })
-export class AddTutorialComponent {
-  tutorial: Tutorial = {
+export class AddTaskComponent {
+  task: Task = {
     title: '',
     description: '',
     published: false
   };
   submitted = false;
 
-  constructor(private tutorialService: TutorialService) {}
+  constructor(private taskService: TaskService) {}
 
-  saveTutorial(): void {
+  saveTask(): void {
     const data = {
-      title: this.tutorial.title,
-      description: this.tutorial.description
+      title: this.task.title,
+      description: this.task.description
     };
 
-    this.tutorialService.create(data).subscribe({
+    this.taskService.create(data).subscribe({
       next: (res) => {
         console.log(res);
         this.submitted = true;
@@ -32,9 +32,9 @@ export class AddTutorialComponent {
     });
   }
 
-  newTutorial(): void {
+  newTask(): void {
     this.submitted = false;
-    this.tutorial = {
+    this.task = {
       title: '',
       description: '',
       published: false

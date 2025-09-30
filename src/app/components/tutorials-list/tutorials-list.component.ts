@@ -1,28 +1,28 @@
 import { Component, OnInit } from '@angular/core';
-import { Tutorial } from '../../models/tutorial.model';
-import { TutorialService } from '../../services/tutorial.service';
+import { Task } from '../../models/task.model';
+import { TaskService } from '../../services/task.service';
 
 @Component({
-  selector: 'app-tutorials-list',
-  templateUrl: './tutorials-list.component.html',
-  styleUrls: ['./tutorials-list.component.css'],
+  selector: 'app-tasks-list',
+  templateUrl: './tasks-list.component.html',
+  styleUrls: ['./tasks-list.component.css'],
 })
-export class TutorialsListComponent implements OnInit {
-  tutorials?: Tutorial[];
-  currentTutorial: Tutorial = {};
+export class TasksListComponent implements OnInit {
+  tasks?: Task[];
+  currentTask: Task = {};
   currentIndex = -1;
   title = '';
 
-  constructor(private tutorialService: TutorialService) {}
+  constructor(private taskService: TaskService) {}
 
   ngOnInit(): void {
-    this.retrieveTutorials();
+    this.retrieveTasks();
   }
 
-  retrieveTutorials(): void {
-    this.tutorialService.getAll().subscribe({
+  retrieveTasks(): void {
+    this.taskService.getAll().subscribe({
       next: (data) => {
-        this.tutorials = data;
+        this.tasks = data;
         console.log(data);
       },
       error: (e) => console.error(e)
@@ -30,18 +30,18 @@ export class TutorialsListComponent implements OnInit {
   }
 
   refreshList(): void {
-    this.retrieveTutorials();
-    this.currentTutorial = {};
+    this.retrieveTasks();
+    this.currentTask = {};
     this.currentIndex = -1;
   }
 
-  setActiveTutorial(tutorial: Tutorial, index: number): void {
-    this.currentTutorial = tutorial;
+  setActiveTask(task: Task, index: number): void {
+    this.currentTask = task;
     this.currentIndex = index;
   }
 
-  removeAllTutorials(): void {
-    this.tutorialService.deleteAll().subscribe({
+  removeAllTasks(): void {
+    this.taskService.deleteAll().subscribe({
       next: (res) => {
         console.log(res);
         this.refreshList();
@@ -51,12 +51,12 @@ export class TutorialsListComponent implements OnInit {
   }
 
   searchTitle(): void {
-    this.currentTutorial = {};
+    this.currentTask = {};
     this.currentIndex = -1;
 
-    this.tutorialService.findByTitle(this.title).subscribe({
+    this.taskService.findByTitle(this.title).subscribe({
       next: (data) => {
-        this.tutorials = data;
+        this.tasks = data;
         console.log(data);
       },
       error: (e) => console.error(e)

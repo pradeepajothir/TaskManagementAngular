@@ -1,17 +1,17 @@
 import { Component, Input, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
-import { Tutorial } from '../../models/tutorial.model';
-import { TutorialService } from '../../services/tutorial.service';
+import { Task } from '../../models/task.model';
+import { TaskService } from '../../services/task.service';
 
 @Component({
-  selector: 'app-tutorial-details',
-  templateUrl: './tutorial-details.component.html',
-  styleUrls: ['./tutorial-details.component.css'],
+  selector: 'app-task-details',
+  templateUrl: './task-details.component.html',
+  styleUrls: ['./task-details.component.css'],
 })
-export class TutorialDetailsComponent implements OnInit {
+export class TaskDetailsComponent implements OnInit {
   @Input() viewMode = false;
 
-  @Input() currentTutorial: Tutorial = {
+  @Input() currentTask: Task = {
     title: '',
     description: '',
     published: false
@@ -20,7 +20,7 @@ export class TutorialDetailsComponent implements OnInit {
   message = '';
 
   constructor(
-    private tutorialService: TutorialService,
+    private taskService: TaskService,
     private route: ActivatedRoute,
     private router: Router
   ) {}
@@ -28,14 +28,14 @@ export class TutorialDetailsComponent implements OnInit {
   ngOnInit(): void {
     if (!this.viewMode) {
       this.message = '';
-      this.getTutorial(this.route.snapshot.params['id']);
+      this.getTask(this.route.snapshot.params['id']);
     }
   }
 
-  getTutorial(id: string): void {
-    this.tutorialService.get(id).subscribe({
+  getTask(id: string): void {
+    this.taskService.get(id).subscribe({
       next: (data) => {
-        this.currentTutorial = data;
+        this.currentTask = data;
         console.log(data);
       },
       error: (e) => console.error(e)
@@ -44,17 +44,17 @@ export class TutorialDetailsComponent implements OnInit {
 
   updatePublished(status: boolean): void {
     const data = {
-      title: this.currentTutorial.title,
-      description: this.currentTutorial.description,
+      title: this.currentTask.title,
+      description: this.currentTask.description,
       published: status
     };
 
     this.message = '';
 
-    this.tutorialService.update(this.currentTutorial.id, data).subscribe({
+    this.taskService.update(this.currentTask.id, data).subscribe({
       next: (res) => {
         console.log(res);
-        this.currentTutorial.published = status;
+        this.currentTask.published = status;
         this.message = res.message
           ? res.message
           : 'The status was updated successfully!';
@@ -63,27 +63,27 @@ export class TutorialDetailsComponent implements OnInit {
     });
   }
 
-  updateTutorial(): void {
+  updateTask(): void {
     this.message = '';
 
-    this.tutorialService
-      .update(this.currentTutorial.id, this.currentTutorial)
+    this.taskService
+      .update(this.currentTask.id, this.currentTask)
       .subscribe({
         next: (res) => {
           console.log(res);
           this.message = res.message
             ? res.message
-            : 'This tutorial was updated successfully!';
+            : 'This task was updated successfully!';
         },
         error: (e) => console.error(e)
       });
   }
 
-  deleteTutorial(): void {
-    this.tutorialService.delete(this.currentTutorial.id).subscribe({
+  deleteTask(): void {
+    this.taskService.delete(this.currentTask.id).subscribe({
       next: (res) => {
         console.log(res);
-        this.router.navigate(['/tutorials']);
+        this.router.navigate(['/tasks']);
       },
       error: (e) => console.error(e)
     });
